@@ -12,7 +12,6 @@ export default function TCDetails() {
     getTCById(id)
       .then((res) => {
         if (res.success === true) {
-          console.log(res);
           setTCFromDB(res.tc[0]);
         }
       })

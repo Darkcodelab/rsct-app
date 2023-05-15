@@ -44,4 +44,22 @@ export const getTCById = async (id) => {
   } catch (error) {
     return { success: false, error: error.response.data.error };
   }
-}; 
+};
+
+export const getTCByUser = async (id) => {
+  try {
+    const { data } = await axios.get(`${backendURL}/api/tc/getTCByUser/${id}`);
+    return data;
+  } catch (error) {
+    return { success: false, error: error.response.data.error };
+  }
+};
+
+export const getRecentActivity = async () => {
+  try {
+    const { data } = await axios.get(`${backendURL}/api/tc/getRecentActivity`);
+    return data;
+  } catch (error) {
+    return { success: false, error: error.response.data.error };
+  }
+};

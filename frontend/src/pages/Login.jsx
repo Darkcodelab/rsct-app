@@ -38,7 +38,6 @@ export default function Login() {
       // set the token to local storage
       setLSItem("rsct-user-token", res.token);
       axios.defaults.headers.common["Authorization"] = `JWT ${res.token}`;
-      console.log(res);
       dispatch({ type: "SET_USER", payload: res.user });
     } else {
       toast.error(res.error);

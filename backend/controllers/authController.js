@@ -7,7 +7,7 @@ const env = require("../config");
 const Joi = require("joi");
 
 const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
   if (!email || !password) {
     res.status(400).json({
       success: false,
@@ -17,6 +17,7 @@ const loginUser = asyncHandler(async (req, res) => {
   }
   if (!validator.isEmail(email) || !validator.isAlphanumeric(password)) {
   }
+  email = email.toLowerCase();
   let existingUser = await User.findOne({ email });
   if (!existingUser) {
     res.status(401).json({ success: false, error: "User not registered" });
@@ -35,7 +36,7 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const registerAdmin = asyncHandler(async (req, res) => {
-  const { email, password, adminToken, name } = req.body;
+  let { email, password, adminToken, name } = req.body;
 
   if (!email || !password || !adminToken) {
     res.status(400).json({
@@ -63,6 +64,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
     });
     return;
   }
+  email = email.toLowerCase();
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     if (existingUser._id) {
@@ -110,12 +112,13 @@ const createUser = asyncHandler(async (req, res) => {
   if (!res.locals.user.admin) {
     res.status(401).json({ success: false, error: "Unauthorized" });
   }
-  const { email, password, name } = req.body;
+  let { email, password, name } = req.body;
   const schema = Joi.object({
     email: Joi.string().email().required(),
     name: Joi.string().required(),
     password: Joi.string().required(),
   });
+  email = email.toLowerCase();
   const value = await schema.validateAsync({ email, password, name });
   const existingUser = await User.findOne({ email });
   if (existingUser) {

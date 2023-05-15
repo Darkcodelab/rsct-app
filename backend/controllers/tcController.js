@@ -5,6 +5,9 @@ const dayjs = require("dayjs");
 // models
 const TC = require("../models/TC");
 
+// utils
+const sanitizeTC = require("../utils/sanitizeTC");
+
 const createTC = asyncHandler(async (req, res) => {
   const tcObj = {
     donorName: req.body.donorName,
@@ -35,17 +38,7 @@ const downloadAllTCs = asyncHandler(async (req, res) => {
   }
   let allTCs = await TC.find().populate("createdBy", "name").lean();
   if (allTCs) {
-    allTCs = allTCs.map((tc) => {
-      return {
-        createdAt: dayjs(tc.createdAt).format("MMM D, YYYY HH:mm"),
-        donorName: tc.donorName,
-        followUpDate: dayjs(tc.followUpDate).format("MMM D, YYYY"),
-        createdBy: tc.createdBy.name,
-        id: tc._id,
-        phoneNumber: tc.phoneNumber,
-        note: tc.note,
-      };
-    });
+    allTCs = sanitizeTC(allTCs);
 
     res.json({ success: true, tc: allTCs });
     return;
@@ -63,17 +56,7 @@ const rangeDownloadTC = asyncHandler(async (req, res) => {
     createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) }
   }).populate("createdBy", "name").lean();
   if (rangeTCs) {
-    rangeTCs = rangeTCs.map((tc) => {
-      return {
-        createdAt: dayjs(tc.createdAt).format("MMM D, YYYY HH:mm"),
-        donorName: tc.donorName,
-        followUpDate: dayjs(tc.followUpDate).format("MMM D, YYYY"),
-        createdBy: tc.createdBy.name,
-        id: tc._id,
-        phoneNumber: tc.phoneNumber,
-        note: tc.note,
-      };
-    });
+    rangeTCs = sanitizeTC(rangeTCs);
     res.json({ success: true, tc: rangeTCs });
     return;
   }
@@ -96,17 +79,7 @@ const getTodaysTC = asyncHandler(async (req, res) => {
   }).populate("createdBy", "name").lean();
 
   if (todayTCs) {
-    todayTCs = todayTCs.map(tc => {
-      return {
-        createdAt: dayjs(tc.createdAt).format("MMM D, YYYY HH:mm"),
-        donorName: tc.donorName,
-        followUpDate: dayjs(tc.followUpDate).format("MMM D, YYYY"),
-        createdBy: tc.createdBy.name,
-        id: tc._id,
-        phoneNumber: tc.phoneNumber,
-        note: tc.note,
-      };
-    });
+    todayTCs = sanitizeTC(todayTCs);
     res.json({ success: true, tc: todayTCs });
     return;
   }
@@ -117,17 +90,29 @@ const getTCById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   let tcFromDB = await TC.findById(id).populate("createdBy", "name").lean();
   if (tcFromDB) {
-    tcFromDB = [tcFromDB].map(tc => {
-      return {
-        createdAt: dayjs(tc.createdAt).format("MMM D, YYYY HH:mm"),
-        donorName: tc.donorName,
-        followUpDate: dayjs(tc.followUpDate).format("MMM D, YYYY"),
-        createdBy: tc.createdBy.name,
-        id: tc._id,
-        phoneNumber: tc.phoneNumber,
-        note: tc.note,
-      };
-    });
+    tcFromDB = sanitizeTC([tcFromDB]);
+    res.json({ success: true, tc: tcFromDB });
+    return;
+  }
+  res.json({ success: false, error: "Database error" });
+});
+
+const getTCByUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  let tcFromDB = await TC.find({ createdBy: id }).populate("createdBy", "name").lean();
+  if (tcFromDB) {
+    tcFromDB = sanitizeTC(tcFromDB);
+    res.json({ success: true, tc: tcFromDB });
+    return;
+  }
+  res.json({ success: false, error: "Database error" });
+});
+
+const getRecentActivity = asyncHandler(async (req, res) => {
+  const today = dayjs().startOf("day");
+  let tcFromDB = await TC.find({ createdAt: { $gte: today.toDate() } }).populate("createdBy", "name").lean();
+  if (tcFromDB) {
+    tcFromDB = sanitizeTC(tcFromDB);
     res.json({ success: true, tc: tcFromDB });
     return;
   }
@@ -139,5 +124,7 @@ module.exports = {
   downloadAllTCs,
   rangeDownloadTC,
   getTodaysTC,
-  getTCById
+  getTCById,
+  getTCByUser,
+  getRecentActivity,
 };

@@ -20,7 +20,7 @@ export default function TodaysFollowUps() {
   if (TCFromDB.length < 1) {
     return (
       <div className="mt-4 p-4 rounded-md shadow-md border-t">
-        <h2 className="font-bold text-lg">Today&apos;s Follow Ups</h2>
+        <h2 className="font-bold text-lg">Today&apos;s Follow Up</h2>
         <p className="text-center mt-2">No follow up for today</p>
       </div>
     );
@@ -29,7 +29,7 @@ export default function TodaysFollowUps() {
   return (
     <div className="mt-4 p-4 rounded-md shadow-md border-t">
       <h2 className="font-bold text-lg">Today&apos;s Follow Ups</h2>
-      <ul className="mt-4 max-h-[300px] overflow-y-auto">
+      <ul className="mt-4 max-h-[400px] overflow-y-auto">
         {TCFromDB.length > 0 &&
           TCFromDB.map((tc) => {
             return (

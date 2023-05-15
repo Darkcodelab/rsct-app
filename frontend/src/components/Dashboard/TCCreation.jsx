@@ -29,7 +29,9 @@ export default function TCCreation() {
 
   return (
     <section className="p-2">
-      <h2 className="text-xl font-semibold text-primary">Donor Creation</h2>
+      <h2 className="text-xl font-semibold text-primary max-w-[600px] mx-auto my-4">
+        Donor Creation
+      </h2>
       <form
         onSubmit={handleFormSubmit}
         className="bg-gray-100 border shadow-md p-4 rounded-md mt-4 max-w-[600px] mx-auto"

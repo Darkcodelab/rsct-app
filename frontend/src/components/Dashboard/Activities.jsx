@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { downloadAllTCs } from "../../context/tc/TCAction";
+import { getRecentActivity } from "../../context/tc/TCAction";
 import TCCard from "../shared/TCCard";
 
 export default function Activities() {
   const [TCFromDB, setTCFromDB] = useState([]);
   const [TCLimit, setTCLimit] = useState(20);
   useEffect(() => {
-    downloadAllTCs()
+    getRecentActivity()
       .then((res) => {
         if (res.success === true) {
           setTCFromDB(res.tc.reverse());
