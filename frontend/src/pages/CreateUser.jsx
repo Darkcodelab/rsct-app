@@ -28,7 +28,7 @@ export default function CreateUser() {
     if (!user?._id || !user?.admin) {
       navigate("/login");
     }
-  });
+  }, [user, navigate]);
 
   const handleInputChange = (event) => {
     setFormFields({ ...formFields, [event.target.name]: event.target.value });

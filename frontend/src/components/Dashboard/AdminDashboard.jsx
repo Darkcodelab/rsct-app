@@ -29,6 +29,12 @@ export default function AdminDashboard() {
         >
           Create New User
         </Link>
+        <Link
+          to="/donorAcknowledgment"
+          className="p-2 mt-2 rounded-md bg-primary text-white w-full block text-center"
+        >
+          Donor Acknowledgment
+        </Link>
         <DownloadAllTC />
         <div className="my-4 max-w-[400px] h-[1px] mx-auto shadow bg-gray-300"></div>
         <DownloadTC />

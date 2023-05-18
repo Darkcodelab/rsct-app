@@ -11,7 +11,8 @@ const {
     getRecentActivity,
     getTodaysTC,
     getTCById,
-    getTCByUser
+    getTCByUser,
+    sendMessage,
 } = require("../../controllers/tcController");
 
 // @route /api/tc/downloadAllTCs
@@ -39,8 +40,12 @@ router.get("/getTCByUser/:id", authorizeUser, getTCByUser);
 // @method GET
 router.get("/getRecentActivity", authorizeUser, getRecentActivity);
 
+// @route /api/tc/sendMessage
+router.post("/sendMessage", authorizeUser, sendMessage);
+
 // @route /api/tc
 // @method POST
 router.post("/", authorizeUser, createTC);
+
 
 module.exports = router;

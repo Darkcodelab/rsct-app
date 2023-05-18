@@ -63,3 +63,12 @@ export const getRecentActivity = async () => {
     return { success: false, error: error.response.data.error };
   }
 };
+
+export const sendWassengerMessage = async (phoneNumber) => {
+  try {
+    const { data } = await axios.post(`${backendURL}/api/tc/sendMessage`, { phoneNumber });
+    return data;
+  } catch (error) {
+    return { success: false, error: error.response.data.error };
+  }
+};

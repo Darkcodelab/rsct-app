@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { phone } from "phone";
 
 // actions
 import { createTC } from "../../context/tc/TCAction";
+import SendMessage from "./SendMessage";
 
 export default function TCCreation() {
   const initalFormFields = {
@@ -11,13 +13,21 @@ export default function TCCreation() {
     followUpDate: new Date().toLocaleDateString(),
     note: "",
   };
+  const [showPopup, setShowPopup] = useState({ show: false, phoneNumber: "" });
   const [formFields, setFormFields] = useState(initalFormFields);
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const res = await createTC(formFields);
+    const validatedPhone = phone(formFields.phoneNumber, { country: "IND" });
+    if (!validatedPhone.isValid) {
+      toast.error("Invalid Phone Number");
+      return;
+    }
+    let tcObj = { ...formFields, phoneNumber: validatedPhone.phoneNumber };
+    const res = await createTC(tcObj);
     if (res.success === true) {
       toast.success("Donor created!");
       setFormFields(initalFormFields);
+      setShowPopup({ show: true, phoneNumber: res.tc.phoneNumber });
     } else {
       toast.error(res.error);
     }
@@ -28,7 +38,7 @@ export default function TCCreation() {
   };
 
   return (
-    <section className="p-2">
+    <section className="p-2 relative">
       <h2 className="text-xl font-semibold text-primary max-w-[600px] mx-auto my-4">
         Donor Creation
       </h2>
@@ -87,6 +97,7 @@ export default function TCCreation() {
           Follow Up Donor
         </button>
       </form>
+      <SendMessage showPopup={showPopup} setShowPopup={setShowPopup} />
     </section>
   );
 }

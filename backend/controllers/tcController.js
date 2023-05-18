@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler");
+const axios = require("axios");
 const Joi = require("joi");
 const dayjs = require("dayjs");
 
@@ -7,6 +8,7 @@ const TC = require("../models/TC");
 
 // utils
 const sanitizeTC = require("../utils/sanitizeTC");
+const env = require("../config");
 
 const createTC = asyncHandler(async (req, res) => {
   const tcObj = {
@@ -119,6 +121,25 @@ const getRecentActivity = asyncHandler(async (req, res) => {
   res.json({ success: false, error: "Database error" });
 });
 
+const sendMessage = asyncHandler(async (req, res) => {
+  // check if number exists on whatsapp
+  const { data } = await axios.post("https://api.wassenger.com/v1/numbers/exists", { phone: req.body.phoneNumber }, {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": env.WASSENGER_TOKEN
+    }
+  });
+  if (data.exists === false) {
+    return res.json({ success: false, error: "Phone Number doesn't exist on WhatsApp" });
+  } else {
+    // TODO: loop through the media and send each message to donor
+    // const { data: messageResponse } = await axios.post("https://api.wassenger.com/v1/messages",);
+  }
+
+  res.json({ success: false });
+
+});
+
 module.exports = {
   createTC,
   downloadAllTCs,
@@ -127,4 +148,5 @@ module.exports = {
   getTCById,
   getTCByUser,
   getRecentActivity,
+  sendMessage,
 };

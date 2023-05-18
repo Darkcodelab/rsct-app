@@ -6,6 +6,7 @@ const env = cleanEnv(process.env, {
   MONGO_URI: url(),
   JWT_SECRET_KEY: str(),
   ADMIN_TOKEN: str(),
+  WASSENGER_TOKEN: str()
 });
 
 module.exports = env;
