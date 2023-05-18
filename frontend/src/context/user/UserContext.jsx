@@ -1,8 +1,8 @@
 import { createContext, useEffect, useReducer } from "react";
 import axios from "axios";
 import userReducer from "./UserReducer";
+import { backendURL } from "../../config";
 
-const backendURL = "http://localhost:5000";
 const UserContext = createContext();
 
 // eslint-disable-next-line react/prop-types

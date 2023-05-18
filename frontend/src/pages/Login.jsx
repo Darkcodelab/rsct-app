@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { setLSItem } from "../utils/localstorage";
 
 // actions
-import { loginUser } from "../context/User/UserAction";
+import { loginUser } from "../context/user/UserAction";
 
 // assets
 import LoginImage from "../assets/login.png";

@@ -9,6 +9,8 @@ const TC = require("../models/TC");
 // utils
 const sanitizeTC = require("../utils/sanitizeTC");
 const env = require("../config");
+const Acknowledgment = require("../models/Acknowledgment");
+const { wassengerAPI_URL } = require("../config/appConfig");
 
 const createTC = asyncHandler(async (req, res) => {
   const tcObj = {
@@ -132,11 +134,35 @@ const sendMessage = asyncHandler(async (req, res) => {
   if (data.exists === false) {
     return res.json({ success: false, error: "Phone Number doesn't exist on WhatsApp" });
   } else {
-    // TODO: loop through the media and send each message to donor
-    // const { data: messageResponse } = await axios.post("https://api.wassenger.com/v1/messages",);
-  }
+    const acknowledgment = await Acknowledgment.find({});
+    if (!acknowledgment) {
+      return res.json({ success: false, error: "Acknowledgment message not found" });
+    }
+    // send text message
+    await axios.post(wassengerAPI_URL + "/messages", {
+      phone: req.body.phoneNumber,
+      message: acknowledgment[0].message
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": env.WASSENGER_TOKEN,
+      }
+    });
 
-  res.json({ success: false });
+    for (let file of acknowledgment[0].media) {
+      try {
+        await axios.post(wassengerAPI_URL + "/messages", {
+          phone: req.body.phoneNumber,
+          media: {
+            file: file.wassengerFileId
+          }
+        });
+      } catch (error) {
+        continue;
+      }
+    }
+    res.json({ success: true });
+  }
 
 });
 

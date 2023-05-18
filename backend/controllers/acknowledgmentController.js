@@ -39,16 +39,22 @@ const addMedia = asyncHandler(async (req, res) => {
     const { id } = req.body;
     const acknowledgment = await Acknowledgment.findById(id);
     if (acknowledgment) {
-        // TODO: Add media to wassenger and get the file id
-        const { data: mediaUpload } = await axios.post(wassengerAPI_URL + "/files", {
+        let { data: mediaUpload } = await axios.post(wassengerAPI_URL + "/files", {
             url: backendURL + "/uploads/" + req.file.filename,
-            format: "native",
+            filename: req.file.originalname,
+            expiration: "2y"
         }, {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": env.WASSENGER_TOKEN
             }
         });
+        mediaUpload = mediaUpload[0];
+
+        if (!mediaUpload) {
+            return res.json({ success: false, error: "Unable to upload to wassenger" });
+        }
+
         if (!mediaUpload.id) {
             return res.json({ success: false, error: mediaUpload.message || "Unable to upload to wassenger" });
         }
@@ -82,14 +88,21 @@ const deleteSingleMedia = asyncHandler(async (req, res) => {
     const { docId, mediaId } = req.params;
     const acknowledgment = await Acknowledgment.findById(docId);
     if (acknowledgment) {
-        const filename = acknowledgment.media.find(e => e._id.toString() === mediaId).filename;
-        // TODO: Delete the file from wassenger
+        const { filename, wassengerFileId } = acknowledgment.media.find(e => e._id.toString() === mediaId);
+        let { data: wassengerResponse } = await axios.delete(wassengerAPI_URL + "/files" + wassengerFileId, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": env.WASSENGER_TOKEN
+            }
+        });
         let media = acknowledgment.media.filter(e => e._id.toString() !== mediaId);
         acknowledgment.media = media;
         await acknowledgment.save();
         deleteUploadedFile(filename);
-        res.json({ success: true });
-        return;
+        if (wassengerResponse?.message) {
+            return res.json({ success: false, error: wassengerResponse.message });
+        }
+        return res.json({ success: true });
     }
     res.json({ success: false, error: "Database error" });
 });

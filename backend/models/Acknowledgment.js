@@ -16,7 +16,10 @@ const AcknowledgmentSchema = new Schema({
         },
         originalFilename: {
             type: String,
-        }
+        },
+        wassengerFileId: {
+            type: String,
+        },
     }],
 }, {
     timestamps: true

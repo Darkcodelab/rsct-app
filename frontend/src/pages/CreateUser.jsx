@@ -11,7 +11,7 @@ import {
 } from "react-icons/md";
 
 // actions
-import { createUser } from "../context/User/UserAction";
+import { createUser } from "../context/user/UserAction";
 
 export default function CreateUser() {
   const navigate = useNavigate();

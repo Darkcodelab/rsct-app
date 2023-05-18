@@ -2,6 +2,7 @@ import { useState } from "react";
 
 // actions
 import { sendWassengerMessage } from "../../context/tc/TCAction";
+import { toast } from "react-toastify";
 
 /* eslint-disable react/prop-types */
 export default function SendMessage({ showPopup, setShowPopup }) {
@@ -10,7 +11,12 @@ export default function SendMessage({ showPopup, setShowPopup }) {
     setLoading(true);
     const res = await sendWassengerMessage(showPopup.phoneNumber);
     setLoading(false);
-    console.log(res);
+    if (res.success === true) {
+      toast.success("Message Sent!");
+      setShowPopup(false);
+    } else {
+      toast.error(res.error);
+    }
   };
 
   return (

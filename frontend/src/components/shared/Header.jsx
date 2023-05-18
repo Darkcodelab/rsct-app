@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../../context/user/UserContext";
 
 // actions
-import { logoutUser } from "../../context/User/UserAction";
+import { logoutUser } from "../../context/user/UserAction";
 import { toast } from "react-toastify";
 
 export default function Header() {
