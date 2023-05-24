@@ -13,7 +13,7 @@ export default function Dashboard() {
     if (!user?._id) {
       navigate("/login");
     }
-  });
+  }, [user, navigate]);
   if (!user?._id) {
     return <div className="text-center text-xl my-4">Loading...</div>;
   }

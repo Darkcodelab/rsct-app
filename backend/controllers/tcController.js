@@ -57,8 +57,10 @@ const rangeDownloadTC = asyncHandler(async (req, res) => {
   }
   const { start_date, end_date } = req.query;
   let rangeTCs = await TC.find({
-    createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) }
-  }).populate("createdBy", "name").lean();
+    createdAt: { $gte: new Date(start_date), $lte: new Date(end_date) },
+  })
+    .populate("createdBy", "name")
+    .lean();
   if (rangeTCs) {
     rangeTCs = sanitizeTC(rangeTCs);
     res.json({ success: true, tc: rangeTCs });
@@ -78,9 +80,11 @@ const getTodaysTC = asyncHandler(async (req, res) => {
   let todayTCs = await TC.find({
     followUpDate: {
       $gte: today.toDate(),
-      $lt: dayjs(today).endOf("day").toDate()
-    }
-  }).populate("createdBy", "name").lean();
+      $lt: dayjs(today).endOf("day").toDate(),
+    },
+  })
+    .populate("createdBy", "name")
+    .lean();
 
   if (todayTCs) {
     todayTCs = sanitizeTC(todayTCs);
@@ -103,7 +107,9 @@ const getTCById = asyncHandler(async (req, res) => {
 
 const getTCByUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  let tcFromDB = await TC.find({ createdBy: id }).populate("createdBy", "name").lean();
+  let tcFromDB = await TC.find({ createdBy: id })
+    .populate("createdBy", "name")
+    .lean();
   if (tcFromDB) {
     tcFromDB = sanitizeTC(tcFromDB);
     res.json({ success: true, tc: tcFromDB });
@@ -114,7 +120,9 @@ const getTCByUser = asyncHandler(async (req, res) => {
 
 const getRecentActivity = asyncHandler(async (req, res) => {
   const today = dayjs().startOf("day");
-  let tcFromDB = await TC.find({ createdAt: { $gte: today.toDate() } }).populate("createdBy", "name").lean();
+  let tcFromDB = await TC.find({ createdAt: { $gte: today.toDate() } })
+    .populate("createdBy", "name")
+    .lean();
   if (tcFromDB) {
     tcFromDB = sanitizeTC(tcFromDB);
     res.json({ success: true, tc: tcFromDB });
@@ -123,48 +131,70 @@ const getRecentActivity = asyncHandler(async (req, res) => {
   res.json({ success: false, error: "Database error" });
 });
 
-const sendMessage = asyncHandler(async (req, res) => {
-  // check if number exists on whatsapp
-  const { data } = await axios.post("https://api.wassenger.com/v1/numbers/exists", { phone: req.body.phoneNumber }, {
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": env.WASSENGER_TOKEN
-    }
-  });
-  if (data.exists === false) {
-    return res.json({ success: false, error: "Phone Number doesn't exist on WhatsApp" });
-  } else {
-    const acknowledgment = await Acknowledgment.find({});
-    if (!acknowledgment) {
-      return res.json({ success: false, error: "Acknowledgment message not found" });
-    }
-    // send text message
-    await axios.post(wassengerAPI_URL + "/messages", {
-      phone: req.body.phoneNumber,
-      message: acknowledgment[0].message
-    }, {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": env.WASSENGER_TOKEN,
-      }
-    });
+// const sendMessage = asyncHandler(async (req, res) => {
+//   // check if number exists on whatsapp
+//   const { data } = await axios.post(
+//     "https://api.wassenger.com/v1/numbers/exists",
+//     { phone: req.body.phoneNumber },
+//     {
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: env.WASSENGER_TOKEN,
+//       },
+//     }
+//   );
+//   if (data.exists === false) {
+//     return res.json({
+//       success: false,
+//       error: "Phone Number doesn't exist on WhatsApp",
+//     });
+//   } else {
+//     const acknowledgment = await Acknowledgment.find({});
+//     if (!acknowledgment) {
+//       return res.json({
+//         success: false,
+//         error: "Acknowledgment message not found",
+//       });
+//     }
+//     // send text message
+//     await axios.post(
+//       wassengerAPI_URL + "/messages",
+//       {
+//         phone: req.body.phoneNumber,
+//         message: acknowledgment[0].message,
+//       },
+//       {
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: env.WASSENGER_TOKEN,
+//         },
+//       }
+//     );
 
-    for (let file of acknowledgment[0].media) {
-      try {
-        await axios.post(wassengerAPI_URL + "/messages", {
-          phone: req.body.phoneNumber,
-          media: {
-            file: file.wassengerFileId
-          }
-        });
-      } catch (error) {
-        continue;
-      }
-    }
-    res.json({ success: true });
-  }
-
-});
+//     for (let file of acknowledgment[0].media) {
+//       try {
+//         await axios.post(
+//           wassengerAPI_URL + "/messages",
+//           {
+//             phone: req.body.phoneNumber,
+//             media: {
+//               file: file.wassengerFileId,
+//             },
+//           },
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: env.WASSENGER_TOKEN,
+//             },
+//           }
+//         );
+//       } catch (error) {
+//         continue;
+//       }
+//     }
+//     res.json({ success: true });
+//   }
+// });
 
 module.exports = {
   createTC,
@@ -174,5 +204,4 @@ module.exports = {
   getTCById,
   getTCByUser,
   getRecentActivity,
-  sendMessage,
 };

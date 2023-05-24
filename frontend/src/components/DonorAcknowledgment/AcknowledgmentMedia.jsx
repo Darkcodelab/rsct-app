@@ -37,7 +37,7 @@ export default function AcknowledgmentMedia({ _selectedMedia, id }) {
           Selected Media - {selectedMedia.length + " file(s)"}
         </h3>
         <form
-          className="flex flex-col mt-4 max-w-[500px] mx-auto"
+          className="flex flex-col mt-4 max-w-[500px] w-full mx-auto"
           onSubmit={handleFormSubmit}
         >
           <input
@@ -62,7 +62,7 @@ export default function AcknowledgmentMedia({ _selectedMedia, id }) {
                   key={media._id}
                   id={media._id}
                   src={backendURL + "/uploads/" + media.filename}
-                  className="w-80 object-cover rounded-md cursor-pointer"
+                  className="w-80 object-cover rounded-md cursor-pointer border border-black"
                   onClick={handleViewMedia}
                 />
               );

@@ -19,6 +19,8 @@ export default function ViewMedia() {
       .then((res) => {
         if (res.success === true) {
           setFile(res.file);
+        } else {
+          toast.error(res.error);
         }
       })
       .catch(console.error);
@@ -31,6 +33,8 @@ export default function ViewMedia() {
     if (res.success === true) {
       toast.success("Media Deleted successfully");
       navigate("/donorAcknowledgment");
+    } else {
+      toast.error(res.error);
     }
   };
 

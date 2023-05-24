@@ -22,7 +22,7 @@ export default function AdminDashboard() {
   }
   return (
     <main className="container mx-auto px-1">
-      <section className="max-w-[500px] mx-auto my-4 p-4 rounded-md shadow-md border">
+      <section className="max-w-[500px] w-full mx-auto my-4 p-4 rounded-md shadow-md border">
         <Link
           to="/createUser"
           className="p-2 rounded-md bg-primary text-white w-full block text-center"
@@ -36,7 +36,7 @@ export default function AdminDashboard() {
           Donor Acknowledgment
         </Link>
         <DownloadAllTC />
-        <div className="my-4 max-w-[400px] h-[1px] mx-auto shadow bg-gray-300"></div>
+        <div className="my-4 max-w-[400px] w-full h-[1px] mx-auto shadow bg-gray-300"></div>
         <DownloadTC />
       </section>
       <section className="mt-6">

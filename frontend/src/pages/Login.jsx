@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../context/user/UserContext";
 import { toast } from "react-toastify";
+import { ColorRing } from "react-loader-spinner";
+
+// utils
 import { setLSItem } from "../utils/localstorage";
 
 // actions
@@ -53,13 +56,13 @@ export default function Login() {
       <div className="px-2">
         <form
           onSubmit={handleFormSubmit}
-          className="max-w-[500px] mx-auto p-4 rounded-md border mt-8 bg-gray-50 shadow-md"
+          className="max-w-[500px] w-full mx-auto p-4 rounded-md border mt-8 bg-gray-50 shadow-md"
         >
           <div className="text-center pb-8">
             <img
               src={LoginImage}
               alt="login"
-              className="max-w-[100%] block rounded-md"
+              className="max-w-[100%] w-full block rounded-md"
             />
             <h2 className="text-xl font-bold mt-2">Welcome</h2>
             <p>Please login to continue</p>
@@ -94,7 +97,25 @@ export default function Login() {
             disabled={loading}
             style={{ cursor: loading ? "not-allowed" : "cursor" }}
           >
-            Login
+            {!loading ? (
+              "Login"
+            ) : (
+              <div className="flex justify-center">
+                <ColorRing
+                  visible={true}
+                  height="30"
+                  width="30"
+                  ariaLabel="blocks-loading"
+                  colors={[
+                    "#e15b64",
+                    "#f47e60",
+                    "#f8b26a",
+                    "#abbd81",
+                    "#849b87",
+                  ]}
+                />
+              </div>
+            )}
           </button>
         </form>
       </div>

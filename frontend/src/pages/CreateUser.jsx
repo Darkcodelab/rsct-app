@@ -12,6 +12,7 @@ import {
 
 // actions
 import { createUser } from "../context/user/UserAction";
+import { ColorRing } from "react-loader-spinner";
 
 export default function CreateUser() {
   const navigate = useNavigate();
@@ -103,7 +104,27 @@ export default function CreateUser() {
             disabled={loading}
             style={{ cursor: loading ? "not-allowed" : "pointer" }}
           >
-            Create User
+            {!loading ? (
+              "Create User"
+            ) : (
+              <div className="flex justify-center">
+                <ColorRing
+                  visible={true}
+                  height="30"
+                  width="30"
+                  ariaLabel="blocks-loading"
+                  wrapperStyle={{}}
+                  wrapperClass="blocks-wrapper"
+                  colors={[
+                    "#e15b64",
+                    "#f47e60",
+                    "#f8b26a",
+                    "#abbd81",
+                    "#849b87",
+                  ]}
+                />
+              </div>
+            )}
           </button>
         </form>
       </section>

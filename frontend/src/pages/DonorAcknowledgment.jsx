@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../context/user/UserContext";
+import { ColorRing } from "react-loader-spinner";
 
 // components
 import AcknowledgmentMessage from "../components/DonorAcknowledgment/AcknowledgmentMessage";
@@ -8,6 +9,7 @@ import AcknowledgmentMedia from "../components/DonorAcknowledgment/Acknowledgmen
 
 // actions
 import { getAcknowledgmentConfig } from "../context/acknowledgment/AcknowledgmentAction";
+import { toast } from "react-toastify";
 
 export default function DonorAcknowledgment() {
   const navigate = useNavigate();
@@ -23,8 +25,9 @@ export default function DonorAcknowledgment() {
     getAcknowledgmentConfig()
       .then((res) => {
         if (res.success === true) {
-          console.log(res);
           setAcknowledgmentConfig(res.acknowledgment[0]);
+        } else {
+          toast.error(res.error);
         }
       })
       .catch((err) => console.error(err));
@@ -32,7 +35,17 @@ export default function DonorAcknowledgment() {
   }, [navigate, user]);
 
   if (loading || !acknowledgmentConfig._id) {
-    return <p>Loading...</p>;
+    return (
+      <main className="container mx-auto p-2 flex justify-center">
+        <ColorRing
+          visible={true}
+          height="80"
+          width="80"
+          ariaLabel="blocks-loading"
+          colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
+        />
+      </main>
+    );
   }
 
   return (

@@ -5,14 +5,14 @@ const authorizeUser = require("../../middlewares/authorizeUser");
 
 // controllers
 const {
-    createTC,
-    downloadAllTCs,
-    rangeDownloadTC,
-    getRecentActivity,
-    getTodaysTC,
-    getTCById,
-    getTCByUser,
-    sendMessage,
+  createTC,
+  downloadAllTCs,
+  rangeDownloadTC,
+  getRecentActivity,
+  getTodaysTC,
+  getTCById,
+  getTCByUser,
+  sendMessage,
 } = require("../../controllers/tcController");
 
 // @route /api/tc/downloadAllTCs
@@ -22,7 +22,6 @@ router.get("/downloadAllTCs", authorizeUser, downloadAllTCs);
 // @route /api/tc/rangeDownload
 // @method GET
 router.get("/rangeDownloadTC", authorizeUser, rangeDownloadTC);
-
 
 // @route /api/tc/getTodaysTC
 // @method GET
@@ -40,12 +39,11 @@ router.get("/getTCByUser/:id", authorizeUser, getTCByUser);
 // @method GET
 router.get("/getRecentActivity", authorizeUser, getRecentActivity);
 
-// @route /api/tc/sendMessage
-router.post("/sendMessage", authorizeUser, sendMessage);
+// // @route /api/tc/sendMessage
+// router.post("/sendMessage", authorizeUser, sendMessage);
 
 // @route /api/tc
 // @method POST
 router.post("/", authorizeUser, createTC);
-
 
 module.exports = router;

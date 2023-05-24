@@ -21,7 +21,9 @@ export const downloadAllTCs = async () => {
 
 export const rangeDownloadTC = async ({ startDate, endDate }) => {
   try {
-    const { data } = await axios.get(`${backendURL}/api/tc/rangeDownloadTC?start_date=${startDate}&end_date=${endDate}`);
+    const { data } = await axios.get(
+      `${backendURL}/api/tc/rangeDownloadTC?start_date=${startDate}&end_date=${endDate}`
+    );
     return data;
   } catch (error) {
     return { success: false, error: error.response.data.error };
@@ -64,11 +66,11 @@ export const getRecentActivity = async () => {
   }
 };
 
-export const sendWassengerMessage = async (phoneNumber) => {
-  try {
-    const { data } = await axios.post(`${backendURL}/api/tc/sendMessage`, { phoneNumber });
-    return data;
-  } catch (error) {
-    return { success: false, error: error.response.data.error };
-  }
-};
+// export const sendWassengerMessage = async (phoneNumber) => {
+//   try {
+//     const { data } = await axios.post(`${backendURL}/api/tc/sendMessage`, { phoneNumber });
+//     return data;
+//   } catch (error) {
+//     return { success: false, error: error.response.data.error };
+//   }
+// };
