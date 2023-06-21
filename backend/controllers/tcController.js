@@ -8,9 +8,9 @@ const TC = require("../models/TC");
 
 // utils
 const sanitizeTC = require("../utils/sanitizeTC");
-const env = require("../config");
-const Acknowledgment = require("../models/Acknowledgment");
-const { wassengerAPI_URL } = require("../config/appConfig");
+// const env = require("../config");
+// const Acknowledgment = require("../models/Acknowledgment");
+// const { wassengerAPI_URL } = require("../config/appConfig");
 
 const createTC = asyncHandler(async (req, res) => {
   const tcObj = {
